@@ -21,6 +21,7 @@ namespace WPFERPQuickLauncher_Core
         public MainWindow()
         {
             InitializeComponent();
+            WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
         }
     }
 }
