@@ -1,0 +1,35 @@
+﻿
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+    <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>WPFERPQuickLauncher_Core</RootNamespace>
+    <EnableDefaultItems>False</EnableDefaultItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Telerik.UI.for.Wpf.NetCore.Xaml" Version="2023.1.117" />
+  </ItemGroup>
+  
+  <ItemGroup>
+  <ApplicationDefinition Include="App.xaml">
+    <Generator>MSBuild:Compile</Generator>
+    <SubType>Designer</SubType>
+  </ApplicationDefinition>
+  <Page Include="MainWindow.xaml">
+    <Generator>MSBuild:Compile</Generator>
+    <SubType>Designer</SubType>
+  </Page>
+  <Compile Include="App.xaml.cs">
+    <DependentUpon>App.xaml</DependentUpon>
+    <SubType>Code</SubType>
+  </Compile>
+  <Compile Include="MainWindow.xaml.cs">
+    <DependentUpon>MainWindow.xaml</DependentUpon>
+    <SubType>Code</SubType>
+  </Compile>
+</ItemGroup>
+
+</Project>
