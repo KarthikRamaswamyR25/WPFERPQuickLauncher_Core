@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WPFERPQuickLauncher_Core"
         mc:Ignorable="d"
         Title="ERP QuickLauncher" Height="475" Width="800">
-    <Grid>
+    <Grid Background="#FFFDFDF5">
         <Button Content="Inventory Balance" HorizontalAlignment="Left" Margin="22,24,0,0" VerticalAlignment="Top" Width="133" Click="Button_Click"/>
         <Label x:Name="lblProfileTxt" Content="Profile" HorizontalAlignment="Left" Margin="10,399,0,0" VerticalAlignment="Top" Width="46" FontWeight="Bold"/>
         <Label x:Name="lblServerTxt" Content="Server" HorizontalAlignment="Left" Margin="201,399,0,0" VerticalAlignment="Top" Width="46" FontWeight="Bold"/>

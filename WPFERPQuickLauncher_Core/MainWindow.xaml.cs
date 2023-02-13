@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+//using WPFcomInventory_Core;
 
 namespace WPFERPQuickLauncher_Core
 {
@@ -28,36 +29,36 @@ namespace WPFERPQuickLauncher_Core
             try
             {
                 InitializeComponent();
-            WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-            Application.Current.MainWindow.Height = 225;
-            this.chkDefault.IsChecked = true;
+                WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+                Application.Current.MainWindow.Height = 225;
+                this.chkDefault.IsChecked = true;
 
-            txtServer.Text = "172.17.71.30";
-            txtDatabase.Text = "URDB";
+                txtServer.Text = "172.17.71.30";
+                txtDatabase.Text = "URDB";
 
-            if (ERPClass.strParamModule != null & ERPClass.strParamModule != "")
-            {
-                if (ERPClass.strParamForm != null & ERPClass.strParamForm != "")
+                if (ERPClass.strParamModule != null & ERPClass.strParamModule != "")
                 {
+                    if (ERPClass.strParamForm != null & ERPClass.strParamForm != "")
+                    {
+                            CreateConn();
 
-                        string assemblyName = string.Format("{0}\\" + ERPClass.strParamModule + ".dll", new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName);
-                        System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
-                        {
-                            Window wnd = LoadAssembly(assemblyName, ERPClass.strParamForm);
-                            wnd.Show();
+                            string assemblyName = string.Format("{0}\\" + ERPClass.strParamModule + ".dll", new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName);
+                            System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+                            {
+                                Window wnd = LoadAssembly(assemblyName, ERPClass.strParamForm);
+                                wnd.Show();
 
-                            this.Close();
-                        }));
+                                this.Close();
+                            }));
+                        }
                     }
                 }
-            }
 
-                    catch (Exception ex)
+            catch (Exception ex)
             {
                 System.Diagnostics.Trace.WriteLine(string.Format("Failed to load window from{0} - {1}", "OtherWindow", ex.Message));
                 throw new Exception(String.Format("Failed to load window from{0} - {1}", "OtherWindow", ex.Message), ex);
             }
-
         }
 
         private static Window LoadAssembly(String assemblyName, String typeName)
@@ -91,7 +92,6 @@ namespace WPFERPQuickLauncher_Core
 
         private void txUserName_TextChanged(object sender, TextChangedEventArgs e)
         {
-
         }
 
         private void cmdCancel_Click(object sender, RoutedEventArgs e)
@@ -100,6 +100,65 @@ namespace WPFERPQuickLauncher_Core
         }
 
         private void cmdOK_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                /////===============================
+                //SqlConnection conn = new SqlConnection();
+                //if (chkDefault.IsChecked == (bool?)true)
+                //{
+                //    // TRUSTED CONNECTION
+                //    conn.ConnectionString =
+                //      "Data Source=" + txtServer.Text + ";" +
+                //      "Initial Catalog=" + txtDatabase.Text + ";" +
+                //      "Integrated Security=SSPI;";
+                //    conn.Open();
+
+                //    //MessageBoxResult resultc = MessageBox.Show(conn.ConnectionString);
+                //}
+                //else
+                //{
+                //    //USERNAME PASSWORD
+                //    conn.ConnectionString =
+                //      "Data Source=" + txtServer.Text + ";" +
+                //      "Initial Catalog=" + txtDatabase.Text + ";" +
+                //      "User id=" + txtUserName.Text + ";" +
+                //      "Password=" + txtPassword.Password + ";";
+                //    conn.Open();
+
+                //    //MessageBoxResult resultc = MessageBox.Show(conn.ConnectionString);
+                //}
+                //MessageBoxResult result1 = MessageBox.Show("Login Success");
+                //ERPClass.MyConn = conn.ConnectionString;
+
+                ////WPFcomInventory_Core.ClSFormShow comInvObj = new WPFcomInventory_Core.ClSFormShow();
+                ////comInvObj.strConn = conn.ConnectionString;
+
+                ////MessageBoxResult resultc = MessageBox.Show(comInvObj.strConn);
+
+                ////int i = Fraction.myStatic;
+                ////MessageBoxResult resultc = MessageBox.Show(i.ToString());
+                ////=======================
+
+                CreateConn();
+
+                ERPMain Win2 = new ERPMain();
+                Win2.Show();
+
+                this.Close();
+            }
+            catch (System.IO.IOException ex)
+            {
+                MessageBoxResult result = MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+            }
+
+        }
+
+
+        private void CreateConn()
         {
             try
             {
@@ -127,13 +186,8 @@ namespace WPFERPQuickLauncher_Core
 
                     //MessageBoxResult resultc = MessageBox.Show(conn.ConnectionString);
                 }
-                MessageBoxResult result1 = MessageBox.Show("Login Success");
+                //MessageBoxResult result1 = MessageBox.Show("Login Success");
                 ERPClass.MyConn = conn.ConnectionString;
-
-                ERPMain Win2 = new ERPMain();
-                Win2.Show();
-
-                this.Close();
             }
             catch (System.IO.IOException ex)
             {
@@ -144,5 +198,7 @@ namespace WPFERPQuickLauncher_Core
             }
 
         }
+
+
     }
 }
