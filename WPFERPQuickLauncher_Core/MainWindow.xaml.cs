@@ -24,6 +24,9 @@ namespace WPFERPQuickLauncher_Core
     /// </summary>
     public partial class MainWindow : Window
     {
+        string strServer;
+        string strSharedDll;
+
         public MainWindow()
         {
             try
@@ -40,9 +43,18 @@ namespace WPFERPQuickLauncher_Core
                 {
                     if (ERPClass.strParamForm != null & ERPClass.strParamForm != "")
                     {
-                            CreateConn();
+                        CreateConn();
+                        GetLocDetails();
 
-                            string assemblyName = string.Format("{0}\\" + ERPClass.strParamModule + ".dll", new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName);
+                        //string assemblyName = string.Format("{0}\\" + ERPClass.strParamModule + ".dll", new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName);
+                        string strLoc = "\\\\" + strServer + "\\" + strSharedDll + "\\";
+                        string assemblyName = string.Format(strLoc + "\\" + ERPClass.strParamModule + "dll", new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName);
+
+                        bool bAllow = IsUserAuthorized((lblUser.Content).ToString(), ERPClass.strMenuCode);
+
+                        if (bAllow == true)
+                        {
+
                             System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
                             {
                                 Window wnd = LoadAssembly(assemblyName, ERPClass.strParamForm);
@@ -51,9 +63,14 @@ namespace WPFERPQuickLauncher_Core
                                 this.Close();
                             }));
                         }
+                        else
+                        {
+                            MessageBoxResult resultc = MessageBox.Show("Sorry!.... Menu Code: " + ERPClass.strMenuCode + " ....  Not Authorized ....");
+                            this.Close();
+                        }
                     }
                 }
-
+            }
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.WriteLine(string.Format("Failed to load window from{0} - {1}", "OtherWindow", ex.Message));
@@ -154,14 +171,38 @@ namespace WPFERPQuickLauncher_Core
             finally
             {
             }
-
         }
 
+        private void GetLocDetails()
+        {
+            //SET SERVER FOLDER AND SHAREDDLL LOCATION
+            SqlConnection oConn = new SqlConnection(ERPClass.MyConn);
+            System.Data.SqlClient.SqlDataReader oDR;
+            System.Data.SqlClient.SqlCommand oCom;
+
+            oConn.Open();
+            oCom = new System.Data.SqlClient.SqlCommand();
+            oCom.Connection = oConn;
+
+            oCom.CommandText = "SELECT DotNetServerName, DotNetSharedDll From ERP_Path";
+            oDR = oCom.ExecuteReader();
+
+            if (oDR.HasRows)
+            {
+                while (oDR.Read())
+                {
+                    strServer = oDR.GetString(0);
+                    strSharedDll = oDR.GetString(1);
+                }
+            }
+        }
 
         private void CreateConn()
         {
             try
             {
+                string userFullName = Environment.UserName;
+
                 SqlConnection conn = new SqlConnection();
                 if (chkDefault.IsChecked == (bool?)true)
                 {
@@ -171,6 +212,13 @@ namespace WPFERPQuickLauncher_Core
                       "Initial Catalog=" + txtDatabase.Text + ";" +
                       "Integrated Security=SSPI;";
                     conn.Open();
+
+                    ERPClass.g_Conn = "Data Source=" + txtServer.Text + ";" +
+                      "Initial Catalog=" + txtDatabase.Text + ";" +
+                      "Integrated Security=SSPI;";
+
+                    lblUser.Content = userFullName;
+                    ERPClass.g_Profile = GetProfileName(userFullName);
 
                     //MessageBoxResult resultc = MessageBox.Show(conn.ConnectionString);
                 }
@@ -184,10 +232,20 @@ namespace WPFERPQuickLauncher_Core
                       "Password=" + txtPassword.Password + ";";
                     conn.Open();
 
+                    ERPClass.g_Conn = "Data Source=" + txtServer.Text + ";" +
+                      "Initial Catalog=" + txtDatabase.Text + ";" +
+                      "User id=" + txtUserName.Text + ";" +
+                      "Password=" + txtPassword.Password + ";";
+
+                    lblUser.Content = txtUserName.Text;
+                    ERPClass.g_Profile = txtUserName.Text;
+
                     //MessageBoxResult resultc = MessageBox.Show(conn.ConnectionString);
                 }
                 //MessageBoxResult result1 = MessageBox.Show("Login Success");
                 ERPClass.MyConn = conn.ConnectionString;
+
+                
             }
             catch (System.IO.IOException ex)
             {
@@ -196,9 +254,67 @@ namespace WPFERPQuickLauncher_Core
             finally
             {
             }
-
         }
 
+        private string GetProfileName(string strUserName)
+        {
+            string strProfile;
+            string strProfileTmp;
+            
+            strProfile = "";
+            strProfileTmp = "";
+
+            //SET SERVER FOLDER AND SHAREDDLL LOCATION
+            SqlConnection oConn = new SqlConnection(ERPClass.g_Conn);
+            System.Data.SqlClient.SqlDataReader oDR;
+            System.Data.SqlClient.SqlCommand oCom;
+
+            oConn.Open();
+            oCom = new System.Data.SqlClient.SqlCommand();
+            oCom.Connection = oConn;
+
+            oCom.CommandText = "select UserName from DomainLoginMap Where NewUserName ='" + strUserName + "'";
+            oDR = oCom.ExecuteReader();
+
+            if (oDR.HasRows)
+            {
+                while (oDR.Read())
+                {
+                    strProfileTmp = oDR.GetString(0);
+                    strProfile = strProfileTmp.Replace(@"\\", @"\");
+                }
+            }
+            else
+            {
+                strProfile= strUserName;
+            }
+
+            return strProfile;
+        }
+
+        private bool IsUserAuthorized(string strUserName, string strMenuCode)
+        {
+            //SET SERVER FOLDER AND SHAREDDLL LOCATION
+            SqlConnection oConn = new SqlConnection(ERPClass.g_Conn);
+            System.Data.SqlClient.SqlDataReader oDR;
+            System.Data.SqlClient.SqlCommand oCom;
+
+            oConn.Open();
+            oCom = new System.Data.SqlClient.SqlCommand();
+            oCom.Connection = oConn;
+
+            oCom.CommandText = "select * from QryMenu where MnuCode='" + strMenuCode + "' AND UserName='" + strUserName + "'";
+            oDR = oCom.ExecuteReader();
+
+            if (oDR.HasRows)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
     }
 }

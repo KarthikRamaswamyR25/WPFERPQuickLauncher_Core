@@ -24,6 +24,7 @@
         <PasswordBox  x:Name="txtPassword" HorizontalAlignment="Left" Height="27" Margin="75,218,0,0" VerticalAlignment="Top" Width="250" Grid.Column="1" PasswordChar="*" />
         <Button x:Name="cmdOK" Content="OK" Grid.Column="1" HorizontalAlignment="Left" Margin="75,144,0,0" VerticalAlignment="Top" Width="84" Height="27" Click="cmdOK_Click"/>
         <Button x:Name="cmdCancel" Content="Cancel" Grid.Column="1" HorizontalAlignment="Left" Margin="241,144,0,0" VerticalAlignment="Top" Width="84" Height="27" Click="cmdCancel_Click"/>
+        <Label x:Name="lblUser" Content="" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="20,145,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
 
     </Grid>
 </Window>

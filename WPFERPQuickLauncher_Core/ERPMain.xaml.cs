@@ -23,6 +23,9 @@ namespace WPFERPQuickLauncher_Core
     /// </summary>
     public partial class ERPMain : Window
     {
+        string strServer;
+        string strSharedDll;
+
         public ERPMain()
         {
             InitializeComponent();
@@ -45,18 +48,53 @@ namespace WPFERPQuickLauncher_Core
             {
                 lblUser.Content = connBuilder.UserID;
             }
+
+            lblUProfile.Content = ERPClass.g_Profile;
+
+            //SET SERVER FOLDER AND SHAREDDLL LOCATION
+            SqlConnection oConn = new SqlConnection(ERPClass.g_Conn);
+            System.Data.SqlClient.SqlDataReader oDR;
+            System.Data.SqlClient.SqlCommand oCom;
+
+            oConn.Open();
+            oCom = new System.Data.SqlClient.SqlCommand();
+            oCom.Connection = oConn;
+
+            oCom.CommandText = "SELECT DotNetServerName, DotNetSharedDll From ERP_Path";
+            oDR = oCom.ExecuteReader();
+
+            if (oDR.HasRows)
+            {
+                while (oDR.Read())
+                {
+                    strServer =  oDR.GetString(0);
+                    strSharedDll = oDR.GetString(1);
+                }
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                string assemblyName = string.Format("{0}\\WPFcomInventory_Core.dll", new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName);
-                System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+                string strLoc = "\\\\" + strServer + "\\" + strSharedDll + "\\";
+                //string assemblyName = string.Format("{0}\\WPFcomInventory_Core.dll", new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName);
+                string assemblyName = string.Format(strLoc + "\\WPFcomInventory_Core.dll", new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName);
+
+                bool bAllow = IsUserAuthorized(lblUProfile.Content.ToString(), "592");
+
+                if (bAllow == true ) 
+                { 
+                    System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+                    {
+                        Window wnd = LoadAssembly(assemblyName, "frmInvBalance");
+                        wnd.Show();
+                    }));
+                }
+                else
                 {
-                    Window wnd = LoadAssembly(assemblyName, "frmInvBalance");
-                    wnd.Show();
-                }));
+                    MessageBoxResult resultc = MessageBox.Show("Sorry!.... Menu Code: 592 ....  Not Authorized ....");
+                }
             }
             catch (Exception ex)
             {
@@ -84,5 +122,31 @@ namespace WPFERPQuickLauncher_Core
                 throw new Exception(string.Format("Failed to load external window{0}", assemblyName), ex);
             }
         }
+
+        private bool IsUserAuthorized(string strUserName, string strMenuCode)
+        {
+            //SET SERVER FOLDER AND SHAREDDLL LOCATION
+            SqlConnection oConn = new SqlConnection(ERPClass.g_Conn);
+            System.Data.SqlClient.SqlDataReader oDR;
+            System.Data.SqlClient.SqlCommand oCom;
+
+            oConn.Open();
+            oCom = new System.Data.SqlClient.SqlCommand();
+            oCom.Connection = oConn;
+
+            oCom.CommandText = "select * from QryMenu where MnuCode='" + strMenuCode + "' AND UserName='" + strUserName.Replace(@"\\", @"\") + "'";
+            oDR = oCom.ExecuteReader();
+
+            if (oDR.HasRows)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
     }
 }
