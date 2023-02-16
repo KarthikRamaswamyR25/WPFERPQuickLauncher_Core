@@ -42,6 +42,16 @@ namespace WPFERPQuickLauncher_Core
                 CreateConn();
                 GetLocDetails();
 
+                if (ERPClass.strConn != null & ERPClass.strConn != "") 
+                {
+                    string userFullName = Environment.UserName;
+                    lblUser.Content = userFullName;
+                    ERPClass.g_Profile = GetProfileName(userFullName);
+
+                    ERPClass.g_Conn = ERPClass.strConn;
+                    ERPClass.MyConn = ERPClass.strConn;
+                }
+
                 if (ERPClass.strParamModule != null & ERPClass.strParamModule != "")
                 {
                     if (ERPClass.strParamForm != null & ERPClass.strParamForm != "")
@@ -51,9 +61,9 @@ namespace WPFERPQuickLauncher_Core
                         string strLoc = "\\\\" + strServer + "\\" + strSharedDll + "\\";
                         string assemblyName = string.Format(strLoc + "\\" + ERPClass.strParamModule + ".dll", new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName);
 
-                        bool bAllow = IsUserAuthorized((ERPClass.g_Profile).ToString(), ERPClass.strMenuCode);
+                        //MessageBoxResult result1 = MessageBox.Show(ERPClass.strParamModule);
 
-                        //MessageBoxResult result1 = MessageBox.Show((ERPClass.g_Profile).ToString() + " " + ERPClass.strMenuCode + " " + bAllow);
+                        bool bAllow = IsUserAuthorized((ERPClass.g_Profile).ToString(), ERPClass.strMenuCode);
 
                         if (bAllow == true)
                         {

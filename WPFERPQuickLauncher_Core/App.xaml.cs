@@ -27,9 +27,10 @@ namespace WPFERPQuickLauncher_Core
 
             for (int i = 0; i != e.Args.Length; ++i)
             {
-                ERPClass.strMenuCode = e.Args[0];
-                ERPClass.strParamModule = e.Args[1];
-                ERPClass.strParamForm = e.Args[2];
+                ERPClass.strConn = e.Args[0];
+                ERPClass.strMenuCode = e.Args[1];
+                ERPClass.strParamModule = e.Args[2];
+                ERPClass.strParamForm = e.Args[3];
             }
         }
 

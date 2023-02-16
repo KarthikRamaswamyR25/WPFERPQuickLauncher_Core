@@ -11,6 +11,7 @@ namespace WPFERPQuickLauncher_Core
         public static string strParamModule;
         public static string strParamForm;
         public static string strMenuCode;
+        public static string strConn;
         public static string g_Conn;
         public static string g_Profile;
     }
