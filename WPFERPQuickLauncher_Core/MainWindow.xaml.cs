@@ -39,18 +39,21 @@ namespace WPFERPQuickLauncher_Core
                 txtServer.Text = "172.17.71.30";
                 txtDatabase.Text = "URDB";
 
+                CreateConn();
+                GetLocDetails();
+
                 if (ERPClass.strParamModule != null & ERPClass.strParamModule != "")
                 {
                     if (ERPClass.strParamForm != null & ERPClass.strParamForm != "")
                     {
-                        CreateConn();
-                        GetLocDetails();
 
                         //string assemblyName = string.Format("{0}\\" + ERPClass.strParamModule + ".dll", new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName);
                         string strLoc = "\\\\" + strServer + "\\" + strSharedDll + "\\";
-                        string assemblyName = string.Format(strLoc + "\\" + ERPClass.strParamModule + "dll", new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName);
+                        string assemblyName = string.Format(strLoc + "\\" + ERPClass.strParamModule + ".dll", new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName);
 
-                        bool bAllow = IsUserAuthorized((lblUser.Content).ToString(), ERPClass.strMenuCode);
+                        bool bAllow = IsUserAuthorized((ERPClass.g_Profile).ToString(), ERPClass.strMenuCode);
+
+                        //MessageBoxResult result1 = MessageBox.Show((ERPClass.g_Profile).ToString() + " " + ERPClass.strMenuCode + " " + bAllow);
 
                         if (bAllow == true)
                         {
@@ -65,7 +68,7 @@ namespace WPFERPQuickLauncher_Core
                         }
                         else
                         {
-                            MessageBoxResult resultc = MessageBox.Show("Sorry!.... Menu Code: " + ERPClass.strMenuCode + " ....  Not Authorized ....");
+                            MessageBoxResult resultc = MessageBox.Show("Sorry!.... Menu Code: " + ERPClass.strMenuCode + " ....  Not Authorized for " + (ERPClass.g_Profile).ToString() + "....");
                             this.Close();
                         }
                     }
@@ -120,43 +123,6 @@ namespace WPFERPQuickLauncher_Core
         {
             try
             {
-                /////===============================
-                //SqlConnection conn = new SqlConnection();
-                //if (chkDefault.IsChecked == (bool?)true)
-                //{
-                //    // TRUSTED CONNECTION
-                //    conn.ConnectionString =
-                //      "Data Source=" + txtServer.Text + ";" +
-                //      "Initial Catalog=" + txtDatabase.Text + ";" +
-                //      "Integrated Security=SSPI;";
-                //    conn.Open();
-
-                //    //MessageBoxResult resultc = MessageBox.Show(conn.ConnectionString);
-                //}
-                //else
-                //{
-                //    //USERNAME PASSWORD
-                //    conn.ConnectionString =
-                //      "Data Source=" + txtServer.Text + ";" +
-                //      "Initial Catalog=" + txtDatabase.Text + ";" +
-                //      "User id=" + txtUserName.Text + ";" +
-                //      "Password=" + txtPassword.Password + ";";
-                //    conn.Open();
-
-                //    //MessageBoxResult resultc = MessageBox.Show(conn.ConnectionString);
-                //}
-                //MessageBoxResult result1 = MessageBox.Show("Login Success");
-                //ERPClass.MyConn = conn.ConnectionString;
-
-                ////WPFcomInventory_Core.ClSFormShow comInvObj = new WPFcomInventory_Core.ClSFormShow();
-                ////comInvObj.strConn = conn.ConnectionString;
-
-                ////MessageBoxResult resultc = MessageBox.Show(comInvObj.strConn);
-
-                ////int i = Fraction.myStatic;
-                ////MessageBoxResult resultc = MessageBox.Show(i.ToString());
-                ////=======================
-
                 CreateConn();
 
                 ERPMain Win2 = new ERPMain();
@@ -202,6 +168,7 @@ namespace WPFERPQuickLauncher_Core
             try
             {
                 string userFullName = Environment.UserName;
+                //string userFullName = "Praveen.Gladwin";
 
                 SqlConnection conn = new SqlConnection();
                 if (chkDefault.IsChecked == (bool?)true)
@@ -303,7 +270,7 @@ namespace WPFERPQuickLauncher_Core
             oCom = new System.Data.SqlClient.SqlCommand();
             oCom.Connection = oConn;
 
-            oCom.CommandText = "select * from QryMenu where MnuCode='" + strMenuCode + "' AND UserName='" + strUserName + "'";
+            oCom.CommandText = "select * from QryMenu where MnuCode='" + strMenuCode + "' AND UserName='" + strUserName.Replace(@"\\", @"\") + "'";
             oDR = oCom.ExecuteReader();
 
             if (oDR.HasRows)
@@ -315,6 +282,7 @@ namespace WPFERPQuickLauncher_Core
                 return false;
             }
         }
+
 
     }
 }

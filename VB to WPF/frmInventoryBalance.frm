@@ -24,5 +24,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Private Sub Command1_Click()
-    Shell "D:\WPF\WPFERPQuickLauncher_Core\WPFERPQuickLauncher_Core\WPFERPQuickLauncher_Core\bin\Debug\netcoreapp3.1\WPFERPQuickLauncher_Core.exe" & " " & "592" & " " & "WPFComInventory_Core" & " " & "frmInvBalance"
+    Shell "\\172.17.71.30\Shareddll\DotNetDll\netcoreapp3.1\WPFERPQuickLauncher_Core.exe" & " " & "592" & " " & "WPFComInventory_Core" & " " & "frmInvBalance"
+    
+    
+    'Shell "D:\WPF\WPFERPQuickLauncher_Core\WPFERPQuickLauncher_Core\WPFERPQuickLauncher_Core\bin\Debug\netcoreapp3.1\WPFERPQuickLauncher_Core.exe" & " " & "592" & " " & "WPFComInventory_Core" & " " & "frmInvBalance"
 End Sub
