@@ -7,8 +7,8 @@
         xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation" x:Class="WPFERPQuickLauncher_Core.ERPMain"
         mc:Ignorable="d"
         Title="ERP QuickLauncher" Height="552" Width="800">
-    <Grid Background="#FFFFFFCC" Margin="0,0,0,-49">
-        <Button Content="Inventory Balance" HorizontalAlignment="Left" Margin="250,35,0,0" VerticalAlignment="Top" Width="133" Click="cmdInvBalance_Click" Visibility="Hidden"/>
+    <Grid x:Name="c" Background="#FFFFFFCC" Margin="0,0,0,-49">
+        <Button Content="Inventory Balance" HorizontalAlignment="Left" Margin="304,149,0,0" VerticalAlignment="Top" Width="100" Click="cmdInvBalance_Click" />
         <Label x:Name="lblProfileTxt" Content="User" HorizontalAlignment="Left" Margin="14,454,0,0" VerticalAlignment="Top" Width="46" FontWeight="Bold"/>
         <Label x:Name="lblServerTxt" Content="Server" HorizontalAlignment="Left" Margin="204,454,0,0" VerticalAlignment="Top" Width="46" FontWeight="Bold"/>
         <Label x:Name="lblDBTxt" Content="Database" HorizontalAlignment="Left" Margin="338,454,0,0" VerticalAlignment="Top" Width="66" FontWeight="Bold"/>
@@ -21,7 +21,7 @@
         <Label x:Name="lblUser" Content="-" HorizontalAlignment="Left" Margin="64,454,0,0" VerticalAlignment="Top" Width="140" FontWeight="Bold" Foreground="#FF073DF6"/>
         <Label x:Name="lblProfileTxt_Copy" Content="Profile" HorizontalAlignment="Left" Margin="14,480,0,0" VerticalAlignment="Top" Width="46" FontWeight="Bold"/>
         <Label x:Name="lblUProfile" Content="-" HorizontalAlignment="Left" Margin="64,480,0,0" VerticalAlignment="Top" Width="140" FontWeight="Bold" Foreground="#FF073DF6"/>
-        <Label Content="Module Name" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="93" FontWeight="Bold" Margin="10,35,0,0"/>
+        <Label Content="Module Name" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="93" FontWeight="Bold" Margin="15,26,0,0"/>
         <Button Content="Load" HorizontalAlignment="Left" Margin="19,66,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <Button Content="Clear" HorizontalAlignment="Left" Margin="19,91,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <Border BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Center" Height="55" Margin="0,123,0,0" VerticalAlignment="Top" Width="780">
@@ -32,9 +32,9 @@
         <TextBox x:Name="txtMenuCode" HorizontalAlignment="Left" Height="20" Margin="87,149,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="69"/>
 
         <telerik:RadGridView x:Name="radGrdFav" HorizontalAlignment="Left" Margin="10,193,0,0" VerticalAlignment="Top" Width="784" Height="261"/>
-        
+
         <Label Content="My Favourites" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="109" FontWeight="Normal" Margin="10,174,0,0" FontSize="10"/>
-        <telerik:RadAutoCompleteBox x:Name="radTxtModule" HorizontalAlignment="Left" Margin="103,35,0,0" VerticalAlignment="Top" Width="142" AutoCompleteMode="Suggest" DisplayMemberPath="MnuName" TextSearchPath="MnuName" TextSearchMode="Contains" SelectionMode="Single"  WatermarkContent="Select a module..." />
+        <telerik:RadAutoCompleteBox x:Name="radTxtModule" HorizontalAlignment="Left" Margin="108,26,0,0" VerticalAlignment="Top" Width="142" AutoCompleteMode="Suggest" DisplayMemberPath="MnuName" TextSearchPath="MnuName" TextSearchMode="Contains" SelectionMode="Single"  WatermarkContent="Select a module..." />
 
     </Grid>
 </Window>

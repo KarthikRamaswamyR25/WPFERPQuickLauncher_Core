@@ -15,7 +15,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-//using WPFcomInventory_Core;
 
 namespace WPFERPQuickLauncher_Core
 {
@@ -36,8 +35,8 @@ namespace WPFERPQuickLauncher_Core
                 Application.Current.MainWindow.Height = 225;
                 this.chkDefault.IsChecked = true;
 
-                txtServer.Text = "172.17.71.30";
-                txtDatabase.Text = "URDB";
+                txtServer.Text = "172.17.71.3";
+                txtDatabase.Text = "URDB0";
 
                 CreateConn();
                 GetLocDetails();
@@ -49,30 +48,23 @@ namespace WPFERPQuickLauncher_Core
                     ERPClass.g_Profile = GetProfileName(userFullName);
 
                     ERPClass.g_Conn = ERPClass.strConn;
-                    ERPClass.MyConn = ERPClass.strConn;
+                    //ERPClass.MyConn = ERPClass.strConn;
                 }
 
                 if (ERPClass.strParamModule != null & ERPClass.strParamModule != "")
                 {
                     if (ERPClass.strParamForm != null & ERPClass.strParamForm != "")
                     {
-
-                        //string assemblyName = string.Format("{0}\\" + ERPClass.strParamModule + ".dll", new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName);
                         string strLoc = "\\\\" + strServer + "\\" + strSharedDll + "\\";
                         string assemblyName = string.Format(strLoc + "\\" + ERPClass.strParamModule + ".dll", new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName);
 
-                        //MessageBoxResult result1 = MessageBox.Show(ERPClass.strParamModule);
-
                         bool bAllow = IsUserAuthorized((ERPClass.g_Profile).ToString(), ERPClass.strMenuCode);
-
                         if (bAllow == true)
                         {
-
                             System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
                             {
                                 Window wnd = LoadAssembly(assemblyName, ERPClass.strParamForm);
                                 wnd.Show();
-
                                 this.Close();
                             }));
                         }
@@ -152,7 +144,7 @@ namespace WPFERPQuickLauncher_Core
         private void GetLocDetails()
         {
             //SET SERVER FOLDER AND SHAREDDLL LOCATION
-            SqlConnection oConn = new SqlConnection(ERPClass.MyConn);
+            SqlConnection oConn = new SqlConnection(ERPClass.g_Conn);
             System.Data.SqlClient.SqlDataReader oDR;
             System.Data.SqlClient.SqlCommand oCom;
 
@@ -196,8 +188,6 @@ namespace WPFERPQuickLauncher_Core
 
                     lblUser.Content = userFullName;
                     ERPClass.g_Profile = GetProfileName(userFullName);
-
-                    //MessageBoxResult resultc = MessageBox.Show(conn.ConnectionString);
                 }
                 else
                 {
@@ -216,13 +206,9 @@ namespace WPFERPQuickLauncher_Core
 
                     lblUser.Content = txtUserName.Text;
                     ERPClass.g_Profile = txtUserName.Text;
-
-                    //MessageBoxResult resultc = MessageBox.Show(conn.ConnectionString);
                 }
-                //MessageBoxResult result1 = MessageBox.Show("Login Success");
-                ERPClass.MyConn = conn.ConnectionString;
 
-                
+                //ERPClass.MyConn = conn.ConnectionString;
             }
             catch (System.IO.IOException ex)
             {
@@ -292,7 +278,5 @@ namespace WPFERPQuickLauncher_Core
                 return false;
             }
         }
-
-
     }
 }

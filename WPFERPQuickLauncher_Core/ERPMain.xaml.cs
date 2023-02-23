@@ -37,7 +37,7 @@ namespace WPFERPQuickLauncher_Core
             lblDate.Content = DateTime.Now.ToString("dd MMM yyyy");
 
             SqlConnectionStringBuilder connBuilder = new SqlConnectionStringBuilder();
-            connBuilder.ConnectionString = ERPClass.MyConn;
+            connBuilder.ConnectionString = ERPClass.g_Conn;
             lblDatabase.Content = connBuilder.InitialCatalog;
             lblServer.Content = connBuilder.DataSource;
 
