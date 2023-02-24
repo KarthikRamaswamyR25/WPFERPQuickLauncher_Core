@@ -191,7 +191,8 @@ namespace WPFERPQuickLauncher_Core
                 string connString = "your connection string"; //dynamically assign the connString here and pass to parameters object
                     object[] constructorParameters = new object[1];
                     constructorParameters[0] = connString;
-                    var wnd = assemblyInstance.CreateInstance(t.FullName, false, BindingFlags.Instance | BindingFlags.NonPublic, null, constructorParameters, null, null) as Window;
+                    /*var wnd = assemblyInstance.CreateInstance(t.FullName, false, BindingFlags.Instance | BindingFlags.NonPublic, null, constructorParameters, null, null) as Window;*/
+                    var wnd = Activator.CreateInstance(t, constructorParameters) as Window;
                     return wnd;
                 }
                 throw new Exception("Unable to load external window");
