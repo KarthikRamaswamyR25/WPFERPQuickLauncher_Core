@@ -188,7 +188,10 @@ namespace WPFERPQuickLauncher_Core
                 Assembly assemblyInstance = Assembly.LoadFrom(assemblyName);
                 foreach (Type t in assemblyInstance.GetTypes().Where(t => String.Equals(t.Name, typeName, StringComparison.OrdinalIgnoreCase)))
                 {
-                    var wnd = assemblyInstance.CreateInstance(t.FullName) as Window;
+                string connString = "your connection string"; //dynamically assign the connString here and pass to parameters object
+                    object[] constructorParameters = new object[1];
+                    constructorParameters[0] = connString;
+                    var wnd = assemblyInstance.CreateInstance(t.FullName, false, BindingFlags.Instance | BindingFlags.NonPublic, null, constructorParameters, null, null) as Window;
                     return wnd;
                 }
                 throw new Exception("Unable to load external window");
@@ -199,6 +202,7 @@ namespace WPFERPQuickLauncher_Core
                 throw new Exception(string.Format("Failed to load external window{0}", assemblyName), ex);
             }
         }
+
 
         private bool IsUserAuthorized(string strUserName, string strMenuCode)
         {
